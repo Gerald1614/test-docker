@@ -1,16 +1,27 @@
 'use strict';
 
 import express from 'express';
+import redis from 'redis';
 
 // Constants
-const PORT = 1337;
-const HOST = '0.0.0.0';
+const PORT = 8081;
 
 // App
 const app = express();
+const client = redis.createClient({
+  host: 'redis-server',
+  port: 6379
+});
+client.set('visits', 0);
+
 app.get('/', (req, res) => {
-  res.send('Hello world\n');
+  client.get('visits', (err, visits) => {
+    res.send(`number of visits is ${visits}`);
+    client.set('visits', parseInt(visits) +1)
+  })
+
 });
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Running on port :${PORT}`);
+});
