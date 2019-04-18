@@ -1,8 +1,8 @@
 FROM node:11
-RUN mkdir -p /usr/app
+
 WORKDIR /usr/app
-COPY package.json ./
+COPY package.json .
 RUN npm install
-COPY . /usr/app
+COPY . .
 EXPOSE 8081
 CMD [ "npm", "start" ]
